@@ -1,0 +1,218 @@
+<Window x:Class="ApparitionWM.Views.ControlPanelWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="clr-namespace:ApparitionWM.Models"
+        xmlns:local="clr-namespace:ApparitionWM.Views"
+        Title="Apparition Window Manager"
+        Width="340" Height="460"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Topmost="True">
+
+    <Window.Resources>
+        <!-- Fade in animation for the panel -->
+        <Storyboard x:Key="PanelFadeIn">
+            <DoubleAnimation Storyboard.TargetName="RootBorder"
+                             Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.25">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="SlideTransform"
+                             Storyboard.TargetProperty="Y"
+                             From="10" To="0" Duration="0:0:0.25">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+    </Window.Resources>
+
+    <!-- Main panel container -->
+    <Border x:Name="RootBorder"
+            CornerRadius="12"
+            Margin="8"
+            Opacity="0">
+        <Border.RenderTransform>
+            <TranslateTransform x:Name="SlideTransform" />
+        </Border.RenderTransform>
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" ShadowDepth="4"
+                              Opacity="0.5" Color="#000000" />
+        </Border.Effect>
+
+        <Border CornerRadius="12"
+                Background="{StaticResource PanelGradient}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="1"
+                ClipToBounds="True">
+
+            <Grid Margin="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />   <!-- Header -->
+                    <RowDefinition Height="8" />      <!-- Spacer -->
+                    <RowDefinition Height="Auto" />   <!-- Search -->
+                    <RowDefinition Height="6" />      <!-- Spacer -->
+                    <RowDefinition Height="*" />      <!-- Window list -->
+                    <RowDefinition Height="8" />      <!-- Spacer -->
+                    <RowDefinition Height="Auto" />   <!-- Section label -->
+                    <RowDefinition Height="Auto" />   <!-- Opacity -->
+                    <RowDefinition Height="12" />     <!-- Spacer -->
+                    <RowDefinition Height="Auto" />   <!-- Section label -->
+                    <RowDefinition Height="Auto" />   <!-- Mode -->
+                    <RowDefinition Height="12" />     <!-- Spacer -->
+                    <RowDefinition Height="Auto" />   <!-- Actions -->
+                </Grid.RowDefinitions>
+
+                <!-- ── Header ──────────────────────────────── -->
+                <Grid Grid.Row="0" MouseDown="Header_MouseDown">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Small ghost icon -->
+                        <Viewbox Width="18" Height="18" Margin="0,0,8,0">
+                            <Canvas Width="24" Height="24">
+                                <Path Fill="{StaticResource AccentBrush}"
+                                      Data="M12,2 C7.58,2 4,5.58 4,10 L4,20 C4,20.55 4.45,21 5,21 L6,21 C6.55,21 7,20.55 7,20 L7,19 L8,20 C8,20.55 8.45,21 9,21 L10,21 C10.55,21 11,20.55 11,20 L11,19 L13,19 L13,20 C13,20.55 13.45,21 14,21 L15,21 C15.55,21 16,20.55 16,20 L16,19 L17,20 C17,20.55 17.45,21 18,21 L19,21 C19.55,21 20,20.55 20,20 L20,10 C20,5.58 16.42,2 12,2 Z" />
+                            </Canvas>
+                        </Viewbox>
+                        <TextBlock Text="Apparition"
+                                   FontSize="16" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextBrush}"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Refresh button -->
+                    <Button Grid.Column="1"
+                            Content="⟳" FontSize="16"
+                            Width="30" Height="30"
+                            Padding="0"
+                            Command="{Binding RefreshCommand}"
+                            ToolTip="Refresh window list" />
+                </Grid>
+
+                <!-- ── Search Filter ───────────────────────── -->
+                <Grid Grid.Row="2">
+                    <TextBox x:Name="SearchBox"
+                             Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
+                             Background="{StaticResource BgSurfaceBrush}"
+                             Foreground="{StaticResource TextBrush}"
+                             BorderBrush="{StaticResource BorderBrush}"
+                             BorderThickness="1"
+                             FontFamily="{StaticResource AppFont}"
+                             FontSize="12"
+                             Padding="8,5"
+                             CaretBrush="{StaticResource AccentLightBrush}" />
+                    <!-- Placeholder text -->
+                    <TextBlock Text="🔍 Search windows..."
+                               Foreground="{StaticResource TextMutedBrush}"
+                               FontSize="12"
+                               Margin="10,6,0,0"
+                               IsHitTestVisible="False"
+                               Visibility="{Binding Text, ElementName=SearchBox, 
+                                            Converter={x:Static local:EmptyToVisibleConverter.Instance}}" />
+                </Grid>
+
+                <!-- ── Window List ─────────────────────────── -->
+                <ListBox Grid.Row="4"
+                         ItemsSource="{Binding Windows}"
+                         SelectedItem="{Binding SelectedWindow}"
+                         MinHeight="100">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:ManagedWindow}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <!-- Window icon -->
+                                <Image Grid.Column="0"
+                                       Source="{Binding IconSource}"
+                                       Width="16" Height="16"
+                                       Margin="0,0,8,0"
+                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                       VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding Title}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                            VerticalAlignment="Center" Margin="8,0,0,0">
+                                    <TextBlock Text="{Binding Mode}"
+                                               FontSize="10"
+                                               Foreground="{StaticResource TextMutedBrush}"
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,6,0" />
+                                    <TextBlock FontSize="10"
+                                               Foreground="{StaticResource TextMutedBrush}"
+                                               VerticalAlignment="Center"
+                                               Text="{Binding Opacity, 
+                                                      Converter={x:Static local:ByteToPercentConverter.Instance},
+                                                      StringFormat={}{0}%}" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <!-- ── Opacity Section ─────────────────────── -->
+                <TextBlock Grid.Row="6" Text="OPACITY"
+                           Style="{StaticResource SectionHeader}" />
+
+                <Grid Grid.Row="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="50" />
+                    </Grid.ColumnDefinitions>
+                    <Slider Value="{Binding Opacity}"
+                            Minimum="5" Maximum="100"
+                            TickFrequency="1"
+                            IsSnapToTickEnabled="True"
+                            VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Foreground="{StaticResource AccentLightBrush}"
+                               FontWeight="SemiBold">
+                        <TextBlock.Text>
+                            <Binding Path="Opacity" StringFormat="{}{0}%" />
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Grid>
+
+                <!-- ── Mode Section ────────────────────────── -->
+                <TextBlock Grid.Row="9" Text="MODE"
+                           Style="{StaticResource SectionHeader}" />
+
+                <ComboBox Grid.Row="10"
+                          SelectedItem="{Binding SelectedMode}"
+                          ItemsSource="{Binding Source={x:Static local:WindowModeValues.All}}" />
+
+                <!-- ── Action Buttons ──────────────────────── -->
+                <Grid Grid.Row="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0"
+                            Content="⚡ Quick Toggle"
+                            Command="{Binding QuickToggleCommand}" />
+                    <Button Grid.Column="2"
+                            Content="💾 Save Preset"
+                            Style="{StaticResource AccentButton}"
+                            Command="{Binding SavePresetCommand}" />
+                </Grid>
+            </Grid>
+        </Border>
+    </Border>
+</Window>

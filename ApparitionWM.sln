@@ -1,7 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApparitionWM", "AppartionWM\ApparitionWM.csproj", "{329C8BEF-B6FF-46FD-861E-031014E9032C}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApparitionWM", "src\ApparitionWM\ApparitionWM.csproj", "{329C8BEF-B6FF-46FD-861E-031014E9032C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
