@@ -3,7 +3,7 @@
 A modern Windows desktop utility for controlling window transparency, z-order, and click-through behavior — accessible from a sleek floating icon widget or the system tray.
 
 ![Platform](https://img.shields.io/badge/platform-Windows-blue)
-![Framework](https://img.shields.io/badge/.NET-8.0-purple)
+![Framework](https://img.shields.io/badge/.NET-10.0-cyan)
 ![UI](https://img.shields.io/badge/UI-WPF-green)
 ![Architecture](https://img.shields.io/badge/pattern-MVVM-orange)
 
@@ -66,7 +66,7 @@ Settings are persisted as JSON in `%LOCALAPPDATA%\Apparition\settings.json`.
 
 ## 🏗️ Architecture
 
-Built with **.NET 8 WPF** using the **MVVM** (Model-View-ViewModel) pattern.
+Built with **.NET 10 WPF** using the **MVVM** (Model-View-ViewModel) pattern.
 
 ```
 src/ApparitionWM/
@@ -106,7 +106,7 @@ src/ApparitionWM/
 
 ### Prerequisites
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 
 ### Build & Run
 
@@ -129,7 +129,7 @@ This produces a single `Apparition.exe` (~60MB) that runs without needing the .N
 
 - **Admin privileges** are recommended for auto-refresh (WMI process watching). The app functions without admin but won't auto-detect new windows.
 - **Ghost mode** uses `WS_EX_TRANSPARENT` — the window becomes completely click-through.
-- The **dark theme** uses a purple accent palette (`#7C3AED`) with Segoe UI Variable typography.
+- The UI features a **Glassmorphism** design with a translucent Midnight Blue background (`#0F172A`) and **Neon Cyan** (`#22D3EE`) accents. Typography uses Segoe UI Variable and Cascadia Code.
 - The legacy WinForms project is preserved in the `AppartionWM/` directory for reference.
 
 ---

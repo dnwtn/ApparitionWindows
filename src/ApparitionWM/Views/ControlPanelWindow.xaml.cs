@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using ApparitionWM.Models;
 using ApparitionWM.ViewModels;
@@ -114,10 +115,35 @@ public partial class ControlPanelWindow : Window
     public void ShowAnimated()
     {
         _deactivateTimer?.Stop();
+        
+        bool isFreshShow = !IsVisible;
+        _isClosingViaFade = false;
+
         Show();
         Activate();
-        var sb = (Storyboard)FindResource("PanelFadeIn");
-        sb.Begin();
+        
+        var fadeIn = new DoubleAnimation
+        {
+            To = 1,
+            Duration = TimeSpan.FromMilliseconds(350),
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+        };
+        RootBorder.BeginAnimation(OpacityProperty, fadeIn);
+
+        if (RootBorder.RenderTransform is TranslateTransform translate)
+        {
+            var slideIn = new DoubleAnimation
+            {
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(350),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            if (isFreshShow)
+            {
+                slideIn.From = 15;
+            }
+            translate.BeginAnimation(TranslateTransform.YProperty, slideIn);
+        }
     }
 
     /// <summary>Fades out and hides the panel.</summary>
@@ -127,8 +153,10 @@ public partial class ControlPanelWindow : Window
         if (!IsVisible || _isClosingViaFade) return;
         _isClosingViaFade = true;
 
-        var fadeOut = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(200))
+        var fadeOut = new DoubleAnimation
         {
+            To = 0,
+            Duration = TimeSpan.FromMilliseconds(200),
             EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
         };
         fadeOut.Completed += (_, _) =>
@@ -137,6 +165,17 @@ public partial class ControlPanelWindow : Window
             _isClosingViaFade = false;
         };
         RootBorder.BeginAnimation(OpacityProperty, fadeOut);
+
+        if (RootBorder.RenderTransform is TranslateTransform translate)
+        {
+            var slideOut = new DoubleAnimation
+            {
+                To = 15,
+                Duration = TimeSpan.FromMilliseconds(200),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+            };
+            translate.BeginAnimation(TranslateTransform.YProperty, slideOut);
+        }
     }
 
     protected override void OnDeactivated(EventArgs e)

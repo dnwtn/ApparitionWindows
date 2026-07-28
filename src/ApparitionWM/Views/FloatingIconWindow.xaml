@@ -47,34 +47,31 @@
                  IsHitTestVisible="False">
             <Ellipse.Fill>
                 <RadialGradientBrush>
-                    <GradientStop Color="#607C3AED" Offset="0" />
-                    <GradientStop Color="#007C3AED" Offset="1" />
+                    <GradientStop Color="#6022D3EE" Offset="0" />
+                    <GradientStop Color="#0022D3EE" Offset="1" />
                 </RadialGradientBrush>
             </Ellipse.Fill>
         </Ellipse>
 
         <!-- Main icon circle -->
         <Ellipse Width="48" Height="48"
-                 StrokeThickness="2">
-            <Ellipse.Fill>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#FF1A1A2E" Offset="0" />
-                    <GradientStop Color="#FF252540" Offset="1" />
-                </LinearGradientBrush>
-            </Ellipse.Fill>
-            <Ellipse.Stroke>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#FF7C3AED" Offset="0" />
-                    <GradientStop Color="#FF6D28D9" Offset="1" />
-                </LinearGradientBrush>
-            </Ellipse.Stroke>
+                 StrokeThickness="2"
+                 Fill="{StaticResource PanelGradient}"
+                 Stroke="{StaticResource AccentGradient}">
+            <Ellipse.Effect>
+                <DropShadowEffect BlurRadius="12" ShadowDepth="4" Opacity="0.5" Color="#000000" />
+            </Ellipse.Effect>
         </Ellipse>
 
         <!-- Ghost icon (simple path) -->
         <Viewbox Width="24" Height="24" Margin="0,0,0,2">
             <Canvas Width="24" Height="24">
-                <Path Fill="#FFA78BFA"
-                      Data="M12,2 C7.58,2 4,5.58 4,10 L4,20 C4,20.55 4.45,21 5,21 L6,21 C6.55,21 7,20.55 7,20 L7,19 L8,20 C8,20.55 8.45,21 9,21 L10,21 C10.55,21 11,20.55 11,20 L11,19 L13,19 L13,20 C13,20.55 13.45,21 14,21 L15,21 C15.55,21 16,20.55 16,20 L16,19 L17,20 C17,20.55 17.45,21 18,21 L19,21 C19.55,21 20,20.55 20,20 L20,10 C20,5.58 16.42,2 12,2 Z M9.5,12 C8.67,12 8,11.33 8,10.5 C8,9.67 8.67,9 9.5,9 C10.33,9 11,9.67 11,10.5 C11,11.33 10.33,12 9.5,12 Z M14.5,12 C13.67,12 13,11.33 13,10.5 C13,9.67 13.67,9 14.5,9 C15.33,9 16,9.67 16,10.5 C16,11.33 15.33,12 14.5,12 Z" />
+                <Path Fill="{StaticResource AccentBrush}"
+                      Data="M12,2 C7.58,2 4,5.58 4,10 L4,20 C4,20.55 4.45,21 5,21 L6,21 C6.55,21 7,20.55 7,20 L7,19 L8,20 C8,20.55 8.45,21 9,21 L10,21 C10.55,21 11,20.55 11,20 L11,19 L13,19 L13,20 C13,20.55 13.45,21 14,21 L15,21 C15.55,21 16,20.55 16,20 L16,19 L17,20 C17,20.55 17.45,21 18,21 L19,21 C19.55,21 20,20.55 20,20 L20,10 C20,5.58 16.42,2 12,2 Z M9.5,12 C8.67,12 8,11.33 8,10.5 C8,9.67 8.67,9 9.5,9 C10.33,9 11,9.67 11,10.5 C11,11.33 10.33,12 9.5,12 Z M14.5,12 C13.67,12 13,11.33 13,10.5 C13,9.67 13.67,9 14.5,9 C15.33,9 16,9.67 16,10.5 C16,11.33 15.33,12 14.5,12 Z">
+                    <Path.Effect>
+                        <DropShadowEffect BlurRadius="8" ShadowDepth="0" Color="{StaticResource AccentPrimary}" Opacity="0.6"/>
+                    </Path.Effect>
+                </Path>
             </Canvas>
         </Viewbox>
 
